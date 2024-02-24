@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookshelf App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Bookshelf App</h1>
+    </header>
+
+    <main>
+      <section class="input-section">
+        <h2>Tambah Buku Baru</h2>
+        <form class="input-form">
+          <div class="input">
+            <label for="book-title">Judul: </label>
+            <input id="book-title" type="text" placeholder="Masukan Judul Buku" />
+          </div>
+
+          <div class="input">
+            <label for="book-author">Penulis: </label>
+            <input id="book-author" type="text" placeholder="Masukan Penulis Buku" />
+          </div>
+
+          <div class="input">
+            <label for="book-year">Tahun: </label>
+            <input id="book-year" type="text" placeholder="Masukan Tahun Buku" />
+          </div>
+
+          <div class="iscomplete">
+            <label for="book-iscomplete">Selesai dibaca</label>
+            <input id="book-iscomplete" type="checkbox" />
+          </div>
+
+          <button id="book-submit" type="submit">Tambah buku ke rak</button>
+        </form>
+
+        <form id="edit-form">
+          <h2>Edit Buku</h2>
+
+          <div class="edit-input">
+            <label for="edit-title">Judul:</label>
+            <input type="text" id="edit-title" />
+          </div>
+
+          <div class="edit-input">
+            <label for="edit-author">Penulis:</label>
+            <input type="text" id="edit-author" />
+          </div>
+
+          <div class="edit-input">
+            <label for="edit-year">Tahun:</label>
+            <input type="number" id="edit-year" />
+          </div>
+
+          <button type="submit">Simpan</button>
+          <button type="button" id="cancel-edit">Batal</button>
+        </form>
+      </section>
+
+      <section class="search-section">
+        <h2>Cari Buku</h2>
+        <form id="search-form">
+          <label for="search-title">Judul: </label>
+          <input id="search-title" type="text" placeholder="Masukan Judul Buku" />
+          <button id="search-submit" type="submit">Cari</button>
+        </form>
+
+        <div id="confirmation-popup">
+          <div class="confirmation-message">Yakin ingin menghapus buku?</div>
+          <div class="confirmation-buttons">
+            <button id="confirm-delete" type="button">Yakin</button>
+            <button id="cancel-delete" type="button">Batal</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="book-shelf" id="incomplete-shelf">
+        <h2>Belum Selesai Dibaca</h2>
+        <div id="incomplete-list" class="book-list"></div>
+      </section>
+
+      <section class="book-shelf" id="complete-shelf">
+        <h2>Selesai Dibaca</h2>
+        <div id="complete-list" class="book-list"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Bookshelf App. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
