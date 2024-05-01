@@ -12,6 +12,8 @@ const deleteBtn = document.getElementById("confirm-delete");
 const cancelBtn = document.getElementById("cancel-delete");
 const confirmDelete = document.getElementById("confirmation-popup");
 
+const popupWrapper = document.querySelector("#wrapper");
+
 // Fungsi untuk membuat buku baru
 function createBookItem(id, title, author, year, isComplete) {
   const bookItem = document.createElement("article");
@@ -35,7 +37,7 @@ function createBookItem(id, title, author, year, isComplete) {
   finishButton.innerText = isComplete ? "Belum selesai" : "Selesai dibaca";
 
   const editButton = document.createElement("button");
-  editButton.className = "btn-yellow";
+  editButton.className = "btn-blue";
   editButton.textContent = "Edit";
 
   const deleteButton = document.createElement("button");
@@ -53,6 +55,28 @@ function createBookItem(id, title, author, year, isComplete) {
   return bookItem;
 }
 
+//Fungsi untuk melakukan line ellipsis
+const applyEllipsis = (element, maxLength) => {
+  const text = element.textContent.trim();
+
+  if (text.length > maxLength) {
+    element.innerText = text.substring(0, maxLength) + "...";
+  }
+};
+
+const applyEllipsisToBookItems = () => {
+  const bookItemsH3 = document.querySelectorAll(".book-item h3");
+  const bookItemsP = document.querySelectorAll(".book-item p");
+  bookItemsH3.forEach((item) => {
+    applyEllipsis(item, 20);
+  });
+  bookItemsP.forEach((item) => {
+    applyEllipsis(item, 27);
+  });
+};
+
+document.addEventListener("DOMContentLoaded", applyEllipsisToBookItems);
+
 // Fungsi untuk menampilkan alert di form input
 function showAlert(message, className, parentElement) {
   const div = document.createElement("div");
@@ -63,10 +87,10 @@ function showAlert(message, className, parentElement) {
   const h2Element = inputSection.querySelector("h2");
   inputSection.insertBefore(div, h2Element.nextSibling);
 
-  setTimeout(() => div.remove(), 3000);
+  setTimeout(() => div.remove(), 2000);
 }
 
-// Mengambil data dari form
+// Mengambil data dari form saat user melakukan submit
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -94,9 +118,10 @@ form.addEventListener("submit", (event) => {
     const bookShelfSection = document.getElementById(bookShelfSectionId);
     bookShelfSection.scrollIntoView({ behavior: "smooth" });
   }
+  applyEllipsisToBookItems();
 });
 
-// Fungsi untuk menambahkan buku baru
+// Fungsi untuk menambahkan buku baru ke local storage
 function addBook(title, author, year, isComplete) {
   const book = {
     id: +new Date(),
@@ -119,7 +144,7 @@ function addBook(title, author, year, isComplete) {
   }
 }
 
-// Fungsi untuk menyimpan daftar buku ke dalam local storage
+// Fungsi untuk menyimpan daftar buku di local storage
 function saveBooksToLocalStorage() {
   localStorage.setItem("completeList", JSON.stringify(completeList));
   localStorage.setItem("incompleteList", JSON.stringify(incompleteList));
@@ -172,6 +197,7 @@ completeListDiv.addEventListener("click", (event) => {
       showAlert("Buku sukses dipindahkan!", "green", "#incomplete-shelf");
     }
   }
+  applyEllipsisToBookItems();
 });
 
 // Memindahkan buku ke rak selesai dibaca
@@ -191,6 +217,7 @@ incompleteListDiv.addEventListener("click", (event) => {
       showAlert("Buku sukses dipindahkan!", "green", "#complete-shelf");
     }
   }
+  applyEllipsisToBookItems();
 });
 
 // Menghapus buku dari rak
@@ -206,16 +233,23 @@ deleteBtn.addEventListener("click", () => {
     renderBooks();
     confirmDelete.style.display = "none";
     showAlert("Buku sukses dihapus!", "green", "#incomplete-shelf");
+    applyEllipsisToBookItems();
   } else if (bookIndex2 !== -1) {
     completeList.splice(bookIndex2, 1);
     saveBooksToLocalStorage();
     renderBooks();
     confirmDelete.style.display = "none";
     showAlert("Buku sukses dihapus!", "green", "#complete-shelf");
+    applyEllipsisToBookItems();
   }
+
+  popupWrapper.classList.remove("popup-wrapper");
 });
 
-cancelBtn.addEventListener("click", () => (confirmDelete.style.display = "none"));
+cancelBtn.addEventListener("click", () => {
+  confirmDelete.style.display = "none";
+  popupWrapper.classList.remove("popup-wrapper");
+});
 
 incompleteListDiv.addEventListener("click", (event) => {
   if (event.target.classList.contains("btn-red")) {
@@ -226,6 +260,7 @@ incompleteListDiv.addEventListener("click", (event) => {
     if (bookIndex !== -1) {
       confirmDelete.bookItem = bookItem;
       confirmDelete.style.display = "flex";
+      popupWrapper.classList.add("popup-wrapper");
     }
   }
 });
@@ -239,6 +274,7 @@ completeListDiv.addEventListener("click", (event) => {
     if (bookIndex !== -1) {
       confirmDelete.bookItem = bookItem;
       confirmDelete.style.display = "flex";
+      popupWrapper.classList.add("popup-wrapper");
     }
   }
 });
@@ -246,7 +282,7 @@ completeListDiv.addEventListener("click", (event) => {
 // Mengedit buku dari rak belum selesai dibaca
 incompleteListDiv.addEventListener("click", (event) => {
   target = event.target;
-  if (target.className.includes("btn-yellow")) {
+  if (target.className.includes("btn-blue")) {
     let bookItem = event.target.closest(".book-item");
     let bookId = bookItem.dataset.id;
     let bookIndex = incompleteList.findIndex((book) => book.id == bookId);
@@ -255,6 +291,7 @@ incompleteListDiv.addEventListener("click", (event) => {
       let editedBook = incompleteList[bookIndex];
       const editForm = document.getElementById("edit-form");
       editForm.style.display = "block";
+      popupWrapper.classList.add("popup-wrapper");
 
       document.getElementById("edit-title").value = editedBook.title;
       document.getElementById("edit-author").value = editedBook.author;
@@ -271,17 +308,20 @@ incompleteListDiv.addEventListener("click", (event) => {
           editedBook.title = newTitle;
           editedBook.author = newAuthor;
           editedBook.year = newYear;
-          showAlert("Buku telah diedit!", "yellow", "#incomplete-shelf");
+          showAlert("Buku telah diedit!", "blue", "#incomplete-shelf");
           saveBooksToLocalStorage();
           editForm.style.display = "none";
+          popupWrapper.classList.remove("popup-wrapper");
           renderBooks();
         }
 
         editedBook = null;
+        applyEllipsisToBookItems();
       });
 
       document.getElementById("cancel-edit").addEventListener("click", () => {
         editForm.style.display = "none";
+        popupWrapper.classList.remove("popup-wrapper");
       });
     }
   }
@@ -290,7 +330,7 @@ incompleteListDiv.addEventListener("click", (event) => {
 // Mengedit buku dari rak selesai dibaca
 completeListDiv.addEventListener("click", (event) => {
   const target = event.target;
-  if (target.className.includes("btn-yellow")) {
+  if (target.className.includes("btn-blue")) {
     const bookItem = event.target.closest(".book-item");
     const bookId = bookItem.dataset.id;
     const bookIndex = completeList.findIndex((book) => book.id == bookId);
@@ -299,6 +339,7 @@ completeListDiv.addEventListener("click", (event) => {
       let editedBook = completeList[bookIndex];
       const editForm = document.getElementById("edit-form");
       editForm.style.display = "block";
+      popupWrapper.classList.add("popup-wrapper");
 
       document.getElementById("edit-title").value = editedBook.title;
       document.getElementById("edit-author").value = editedBook.author;
@@ -317,15 +358,19 @@ completeListDiv.addEventListener("click", (event) => {
           editedBook.year = newYear;
           saveBooksToLocalStorage();
           editForm.style.display = "none";
+          popupWrapper.classList.remove("popup-wrapper");
+
           renderBooks();
-          showAlert("Buku telah diedit!", "yellow", "#complete-shelf");
+          showAlert("Buku telah diedit!", "blue", "#complete-shelf");
         }
 
         editedBook = null;
+        applyEllipsisToBookItems();
       });
 
       document.getElementById("cancel-edit").addEventListener("click", () => {
         editForm.style.display = "none";
+        popupWrapper.classList.remove("popup-wrapper");
       });
     }
   }
@@ -341,6 +386,7 @@ document.getElementById("search-form").addEventListener("submit", (event) => {
   const filteredBooks = [...filteredIncompleteBooks, ...filteredCompleteBooks];
 
   renderFilteredBooks(filteredBooks);
+  applyEllipsisToBookItems();
 });
 
 // Fungsi untuk menampilkan daftar buku yang sudah difilter

@@ -69,24 +69,30 @@
           <button id="search-submit" type="submit">Cari</button>
         </form>
 
-        <div id="confirmation-popup">
-          <div class="confirmation-message">Yakin ingin menghapus buku?</div>
-          <div class="confirmation-buttons">
-            <button id="confirm-delete" type="button">Yakin</button>
-            <button id="cancel-delete" type="button">Batal</button>
+        <div id="wrapper">
+          <div id="confirmation-popup">
+            <div class="confirmation-message">Yakin ingin menghapus buku?</div>
+            <div class="confirmation-buttons">
+              <button id="confirm-delete" type="button">Yakin</button>
+              <button id="cancel-delete" type="button">Batal</button>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="book-shelf" id="incomplete-shelf">
-        <h2>Belum Selesai Dibaca</h2>
-        <div id="incomplete-list" class="book-list"></div>
-      </section>
+      <div class="wrapper">
+        <section class="book-shelf" id="incomplete-shelf">
+          <h2>Belum Selesai Dibaca</h2>
+          <div id="incomplete-list" class="book-list"></div>
+        </section>
+      </div>
 
-      <section class="book-shelf" id="complete-shelf">
-        <h2>Selesai Dibaca</h2>
-        <div id="complete-list" class="book-list"></div>
-      </section>
+      <div class="wrapper">
+        <section class="book-shelf" id="complete-shelf">
+          <h2>Selesai Dibaca</h2>
+          <div id="complete-list" class="book-list"></div>
+        </section>
+      </div>
     </main>
 
     <footer>
